@@ -1,22 +1,24 @@
-#
-#
-#
-#
+# A script to fetch a string from a remote
+# server, reverse it, and send the result back
+
 
 import requests
+from registration import token, doubleCheck
 
-token = '0756140fa1f238700cd260f5f813fab6'
+# instance variables
+get_url = 'http://challenge.code2040.org/api/reverse'
+post_url = 'http://challenge.code2040.org/api/reverse/validate'
 
-r = requests.post('http://challenge.code2040.org/api/reverse', data={'token' : token})
-'''
-print r.status_code
-print r.text
-'''
+# fetch the data
+objectToReverse = requests.post(get_url, data={'token' : token})
+
+# Reverse the string
 def reverse(string):
     return string[::-1]
 
+# send the result back
+reversedString = reverse(objectToReverse.text)
+post = requests.post(post_url, data = {'token': token, 'string' : reversedString})
 
-reversedString = reverse(r.text)
-
-requests.post('http://challenge.code2040.org/api/reverse/validate', data = {'token': token, 'string' : reversedString})
-
+# check
+doubleCheck(post)

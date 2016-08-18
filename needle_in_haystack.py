@@ -6,20 +6,26 @@
 
 import requests
 import json
-from 
+from registration import token, doubleCheck
 
-token = '0756140fa1f238700cd260f5f813fab6'
+# instance variables
 get_url = 'http://challenge.code2040.org/api/haystack'
 post_url = 'http://challenge.code2040.org/api/haystack/validate'
 
+# Fetches the json data from the remote server
 def get_exercise(get_url, token):
     return requests.post(get_url, data={'token': token})
 
+# Get the text of the request object and turn it
+# into a json dictionary
 stringResponse = get_exercise(get_url, token).text
 jsonResponse = json.loads(stringResponse)
+
+# Extract the values from the dictionary
 needle = jsonResponse['needle']
 haystack = jsonResponse['haystack']
 
+# A simple linear search
 def search_haystack(needle, haystack):
     index = 0
     for each in haystack:
@@ -27,10 +33,13 @@ def search_haystack(needle, haystack):
             return index
         index = index + 1
     return -1
-        
-index = search_haystack(needle, haystack)
 
+# Post the information back to the remote server
+index = search_haystack(needle, haystack)
 def post_exercise(post_val, url, data_name):
     return requests.post(url, json={'token' : token, data_name : post_val})
 
-post_exercise(index, post_url, 'needle')
+post = post_exercise(index, post_url, 'needle')
+
+# see to it that all is well
+doubleCheck(post)

@@ -13,11 +13,13 @@ payload = {
     'github' : github
 }
 
+#check to see that all is okay
+def doubleCheck(request):
+    if request.status_code == 200:
+        print "200 [OK]"
+    else:
+        print request.text
+
 #post
 request = requests.post('http://challenge.code2040.org/api/register',  data=payload)
-
-#check to see that all is okay
-if request.status == 200:
-    print "200 [OK]"
-else:
-    print request.text
+doubleCheck(request)
